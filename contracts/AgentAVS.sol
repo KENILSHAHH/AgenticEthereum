@@ -11,22 +11,13 @@ import "@openzeppelin/contracts/utils/Strings.sol";
 import "eigenlayer-contracts/src/contracts/interfaces/IRewardsCoordinator.sol";
 import {TransparentUpgradeableProxy} from "@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol";
 
-/**
- * @title Primary entrypoint for procuring services from HelloWorld.
- * @author Eigen Labs, Inc.
- */
 contract AgentAVS is ECDSAServiceManagerBase, IAgentAVS {
     using ECDSAUpgradeable for bytes32;
 
     uint32 public latestTaskNum;
 
-    // mapping of task indices to all tasks hashes
-    // when a task is created, task hash is stored here,
-    // and responses need to pass the actual task,
-    // which is hashed onchain and checked against this mapping
     mapping(uint32 => bytes32) public allTaskHashes;
 
-    // mapping of task indices to hash of abi.encode(taskResponse, taskResponseMetadata)
     mapping(address => mapping(uint32 => bytes)) public allTaskResponses;
 
     modifier onlyOperator() {
@@ -58,15 +49,11 @@ contract AgentAVS is ECDSAServiceManagerBase, IAgentAVS {
         __ServiceManagerBase_init(initialOwner, _rewardsInitiator);
     }
 
-    /* FUNCTIONS */
-    // NOTE: this function creates new task, assigns it a taskId
     function createNewTask(string memory name) external returns (Task memory) {
-        // create a new task struct
         Task memory newTask;
         newTask.name = name;
         newTask.taskCreatedBlock = uint32(block.number);
 
-        // store hash of task onchain, emit event, and increase taskNum
         allTaskHashes[latestTaskNum] = keccak256(abi.encode(newTask));
         emit NewTaskCreated(latestTaskNum, newTask);
         latestTaskNum = latestTaskNum + 1;
@@ -79,7 +66,6 @@ contract AgentAVS is ECDSAServiceManagerBase, IAgentAVS {
         uint32 referenceTaskIndex,
         bytes memory signature
     ) external {
-        // check that the task is valid, hasn't been responsed yet, and is being responded in time
         require(
             keccak256(abi.encode(task)) == allTaskHashes[referenceTaskIndex],
             "supplied task does not match the one recorded in the contract"
@@ -89,8 +75,7 @@ contract AgentAVS is ECDSAServiceManagerBase, IAgentAVS {
             "Operator has already responded to the task"
         );
 
-        // The message that was signed
-        bytes32 messageHash = keccak256(abi.encodePacked("Hello, ", task.name));
+        bytes32 messageHash = keccak256(abi.encodePacked("AVS", task.name));
         bytes32 ethSignedMessageHash = messageHash.toEthSignedMessageHash();
         bytes4 magicValue = IERC1271Upgradeable.isValidSignature.selector;
         if (
@@ -103,10 +88,8 @@ contract AgentAVS is ECDSAServiceManagerBase, IAgentAVS {
             revert();
         }
 
-        // updating the storage with task responses
         allTaskResponses[msg.sender][referenceTaskIndex] = signature;
 
-        // emitting event
         emit TaskResponded(referenceTaskIndex, task, msg.sender);
     }
 }
