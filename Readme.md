@@ -36,8 +36,22 @@ Accountability: Detailed, immutable records support regulatory compliance and di
 # Traditional Agents 
 <img width="539" alt="Screenshot 2025-02-09 at 11 40 15 PM" src="https://github.com/user-attachments/assets/9c944423-2ef2-4f7e-a53d-093f019bd820" />
 
-AVSAgent
+
+
+# AVSAgent
 <img width="785" alt="Screenshot 2025-02-09 at 11 40 30 PM" src="https://github.com/user-attachments/assets/7b4377f5-7352-4914-bf04-f64d8bbfca26" />
+
+### How it works ? 
+
+1) User creates a request and send it to the agent
+
+2) Agent computes on the request and returns with a response
+
+3) EigenLayer operators verifies the response received through core contracts and signs on the resposne
+
+1) AVSAgent Contract on Holesky Testnet - https://holesky.etherscan.io/tx/0x88fb1929f1a841c71bf260cc7d918f7107b3e9fa24531334ca6ed981775e7560
+
+
 
 
 
