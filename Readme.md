@@ -31,4 +31,14 @@ Accountability: Detailed, immutable records support regulatory compliance and di
 
 ---
 
-## Getting Started with AVSAgent
+## Architecture of AVSAgent
+
+# Traditional Agents 
+<img width="539" alt="Screenshot 2025-02-09 at 11 40 15 PM" src="https://github.com/user-attachments/assets/9c944423-2ef2-4f7e-a53d-093f019bd820" />
+
+AVSAgent
+<img width="785" alt="Screenshot 2025-02-09 at 11 40 30 PM" src="https://github.com/user-attachments/assets/7b4377f5-7352-4914-bf04-f64d8bbfca26" />
+
+
+
+
