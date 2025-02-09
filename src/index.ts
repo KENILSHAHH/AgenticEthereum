@@ -45,7 +45,6 @@ async function chat(thread: Thread, assistant: Assistant): Promise<void> {
 
             if (result?.type === 'text') {
                 console.log('\nAlt:', result.text.value);
-          
             }
 
         } catch (error) {
